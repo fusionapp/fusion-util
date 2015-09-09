@@ -8,3 +8,4 @@ RUN . /appenv/bin/activate \
 RUN . /appenv/bin/activate \
   && pip install eliot-tree
 ENV PATH /appenv/bin:$PATH
+WORKDIR "/db"
