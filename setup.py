@@ -1,14 +1,10 @@
-import re
-from setuptools import setup, find_packages
-
-versionPattern = re.compile(r"""^__version__ = ['"](.*?)['"]$""", re.M)
-with open("fusion_util/_version.py", "rt") as f:
-    version = versionPattern.search(f.read()).group(1)
-
+import versioneer
+from setuptools import find_packages, setup
 
 setup(
     name='fusion-util',
-    version=version,
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description='Utility package for Fusion',
     url='https://github.org/fusionapp/fusion-util',
     install_requires=[
