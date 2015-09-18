@@ -13,8 +13,6 @@ setup(
     url='https://github.org/fusionapp/fusion-util',
     install_requires=[
         'Twisted[tls] >= 15.0.0',
-        'txspinneret >= 0.1.2',
-        'testtools',
         ],
     license='MIT',
     packages=find_packages(),
