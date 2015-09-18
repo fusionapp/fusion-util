@@ -1,0 +1,25 @@
+sudo: false
+
+language: python
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+install:
+  - pip install -U pip setuptools
+  - pip install tox codecov
+
+script:
+  - tox
+
+after_success:
+  - codecov
+
+notifications:
+  email: false
+  irc:
+    channels:
+      - secure: "nQc5l5SLSEk25ramzw/dKk4pDi1Q/iubnRt7zPiLUe/3QB9xwMjwhHf2xHHuVzMLSMmtZDYwESAYMRtkXtkDlDfjPtMRs6ZSJfRNJ8PtrCf3s8COZjDiNuY9b+WWplasPbSe8w0Ke7x1vxvH5grryr7FfkLDdoFuQT52+puh4hH1K+bp5gZ3xfFSQu5j7L6OvL/lSzizIXHoCclDfBs4LdqL2hCoMKXUr0FufsL8P6qsAOuMEsl3Tde3bJ5kRzik6P8fPIHgrqV9UapZvrkkluxKwW4W/UQPAJKzxu2BiHZXzrDHOt8Ihl1HjCD9IYg6DR48xXIXN0f0Eno8jkNDqApE3xVccLT375IhnMhiEM+pLFT2hPy3/xeQIF0mZj8EyazSMB+qb8X+6dMJLZ8zlCU4voMlgS4x02wG3N8+KtjVyLIRqNhxXqt1mf2QZVzBVZ2pFHCju8S5d7SPfwysyWez76SdEkC5MVnd17nzemYe3vQgtQX4O+UVjO48hpMhW6CFPeIlUzFjr3phbTzD1yhyGtQg2zQLxNsBeDWZwMAmqENM5V9bZyi1NvcIQfg8VjjmQPuGjNnj+1bbHtbSL7L9ZQNH4dRDsJNABG4jqipMeIKsUxfUqJ/qmmfyM0MIlXqHMXgB+BeYtwGPxBzqd6cx+k7bhc8uOAsnCzQD2FQ="
+    skip_join: true
+    use_notice: true
