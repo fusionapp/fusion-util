@@ -1,9 +1,10 @@
+import warnings
 from operator import methodcaller
 
 from testtools import TestCase
 from testtools.matchers import AfterPreprocessing as After
 from testtools.matchers import (
-    Equals, HasLength, Is, MatchesAll, MatchesListwise,
+    Contains, Equals, HasLength, Is, MatchesAll, MatchesListwise,
     MatchesStructure, raises)
 
 from fusion_util.enums import Enum, EnumItem, filter_enum, ObjectEnum
@@ -38,6 +39,24 @@ class EnumItemTests(TestCase):
         self.assertThat(
             list(item.items()),
             Equals([('a', 1), ('b', u'2')]))
+
+
+    def test_getattr_deprecated(self):
+        """
+        `EnumItem.__getattr__` is deprecated.
+        """
+        item = EnumItem(u'foo', u'Foo', a=1, b=u'2')
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            item.a
+            self.assertThat(
+                w,
+                MatchesListwise([
+                    MatchesStructure(
+                        category=Is(DeprecationWarning),
+                        message=After(
+                            str,
+                            Contains('use EnumItem.get')))]))
 
 
 
@@ -310,6 +329,17 @@ class ObjectEnumTests(TestCase):
     """
     Tests for `fusion_util.enums.ObjectEnum`.
     """
+    def test_as_pairs(self):
+        """
+        Representing an enumeration as a list of pairs.
+        """
+        object1, object2, object3 = object(), object(), object()
+        values = object_enum_values_fixture(object1, object2, object3)
+        enum = ObjectEnum('doc', values)
+        pairs = [(e.get('id', e.value), e.desc) for e in values]
+        self.assertThat(enum.as_pairs(), Equals(pairs))
+
+
     def test_get(self):
         """
         Getting an enumeration item by value returns the relevant `EnumItem`
@@ -318,7 +348,7 @@ class ObjectEnumTests(TestCase):
         """
         object1, object2, object3 = object(), object(), object()
         values = object_enum_values_fixture(object1, object2, object3)
-        enum = Enum('doc', values)
+        enum = ObjectEnum('doc', values)
         self.assertThat(
             values,
             Equals([enum.get(e.value) for e in values]))
