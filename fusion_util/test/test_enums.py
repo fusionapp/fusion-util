@@ -38,7 +38,8 @@ class EnumItemTests(TestCase):
         item = EnumItem(u'foo', u'Foo', a=1, b=u'2')
         self.assertThat(
             list(item.items()),
-            Equals([('a', 1), ('b', u'2')]))
+            After(sorted,
+                  Equals([('a', 1), ('b', u'2')])))
 
 
     def test_getattr(self):
@@ -540,5 +541,5 @@ class FilterEnumTests(TestCase):
                               value=Equals(u'3'),
                               desc=Equals(u'Option Three'),
                               hidden=Equals(False)),
-                          After(methodcaller('items'),
+                          After(lambda ei: sorted(ei.items()),
                                 Equals([('a', 3), ('b', 30)])))])))
