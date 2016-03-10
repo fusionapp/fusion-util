@@ -41,11 +41,30 @@ class EnumItemTests(TestCase):
             Equals([('a', 1), ('b', u'2')]))
 
 
+    def test_getattr(self):
+        """
+        Additional enum values can be accessed like attributes.
+        """
+        item = EnumItem(u'foo', u'Foo', a=1)
+        self.assertThat(item.a, Equals(1))
+
+
+    def test_getattr_error(self):
+        """
+        Trying to access nonexistent additional enum values by attribute
+        results in `AttributeError`.
+        """
+        item = EnumItem(u'foo', u'Foo', a=1)
+        self.assertThat(
+            lambda: item.b,
+            raises(AttributeError))
+
+
     def test_getattr_deprecated(self):
         """
         `EnumItem.__getattr__` is deprecated.
         """
-        item = EnumItem(u'foo', u'Foo', a=1, b=u'2')
+        item = EnumItem(u'foo', u'Foo', a=1)
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
             item.a
