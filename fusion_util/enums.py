@@ -71,7 +71,12 @@ class Enum(object):
         values = (EnumItem(value, desc) for value, desc in pairs)
         return cls(doc=doc, values=values)
 
-    fromPairs = from_pairs
+
+    @classmethod
+    def fromPairs(cls, doc, pairs):
+        warn('Enum.fromPairs is deprecated, use Enum.from_pairs',
+             DeprecationWarning, 2)
+        return cls.from_pairs(doc, pairs)
 
 
     def get(self, value):
@@ -101,10 +106,14 @@ class Enum(object):
         except InvalidEnumItem:
             return u''
 
-    getDesc = desc
+
+    def getDesc(self, value):
+        warn('Enum.getDesc is deprecated, use Enum.desc',
+             DeprecationWarning, 2)
+        return self.desc(value)
 
 
-    def get_extra(self, value, extra_name, default=None):
+    def extra(self, value, extra_name, default=None):
         """
         Get the additional enumeration value for ``extra_name``.
 
@@ -117,7 +126,11 @@ class Enum(object):
         except InvalidEnumItem:
             return default
 
-    getExtra = get_extra
+
+    def getExtra(self, value, extraName, default=None):
+        warn('Enum.getExtra is deprecated, use Enum.extra',
+             DeprecationWarning, 2)
+        return self.extra(value, extraName, default)
 
 
     def find(self, **names):
@@ -148,7 +161,11 @@ class Enum(object):
             if item.get(name) == value:
                 yield item
 
-    findAll = find_all
+
+    def findAll(self, **names):
+        warn('Enum.findAll is deprecated, use Enum.find_all',
+             DeprecationWarning, 2)
+        return self.find_all(**names)
 
 
     def as_pairs(self):
@@ -160,7 +177,11 @@ class Enum(object):
         """
         return [(i.value, i.desc) for i in self]
 
-    asPairs = as_pairs
+
+    def asPairs(self):
+        warn('Enum.asPairs is deprecated, use Enum.as_pairs',
+             DeprecationWarning, 2)
+        return self.as_pairs()
 
 
 
