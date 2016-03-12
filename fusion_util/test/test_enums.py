@@ -5,10 +5,60 @@ from testtools import TestCase
 from testtools.matchers import AfterPreprocessing as After
 from testtools.matchers import (
     Contains, Equals, HasLength, Is, MatchesAll, MatchesListwise,
-    MatchesStructure, raises)
+    MatchesStructure, Mismatch, raises)
 
 from fusion_util.enums import Enum, EnumItem, filter_enum, ObjectEnum
 from fusion_util.errors import InvalidEnumItem
+
+
+
+class Warnings(object):
+    """
+    Match if the matchee produces deprecation warnings.
+    """
+    def __init__(self, warnings_matcher=None):
+        """
+        Create a Warnings matcher.
+
+        :param warnings_matcher: Optional validator for the warnings emitted by
+        matchee. If no warnings_matcher is supplied then the simple fact that
+        at least one warning is emitted is considered enough to match on.
+        """
+        self.warnings_matcher = warnings_matcher
+
+
+    def match(self, matchee):
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            matchee()
+            if not w:
+                mismatch = Mismatch('Expected warnings, got none')
+            elif self.warnings_matcher:
+                mismatch = self.warnings_matcher.match(w)
+            else:
+                mismatch = None
+            return mismatch
+
+
+    def __str__(self):
+        return 'Warnings({!s})'.format(self.warnings_matcher)
+
+
+
+def is_deprecated(message):
+    """
+    Make a matcher that checks that a callable produces exactly one
+    `DeprecationWarning`.
+
+    :param message: Matcher for the warning message.
+    """
+    return Warnings(
+        MatchesListwise([
+            MatchesStructure(
+                category=Is(DeprecationWarning),
+                message=After(
+                    str,
+                    message))]))
 
 
 
@@ -66,17 +116,9 @@ class EnumItemTests(TestCase):
         `EnumItem.__getattr__` is deprecated.
         """
         item = EnumItem(u'foo', u'Foo', a=1)
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter('always')
-            item.a
-            self.assertThat(
-                w,
-                MatchesListwise([
-                    MatchesStructure(
-                        category=Is(DeprecationWarning),
-                        message=After(
-                            str,
-                            Contains('use EnumItem.get')))]))
+        self.assertThat(
+            lambda: item.a,
+            is_deprecated(Contains('use EnumItem.get')))
 
 
 
@@ -185,6 +227,55 @@ class GenericEnumTestsMixin(TestCase):
             raises(ValueError))
 
 
+    def test_findAll_deprecated(self):
+        """
+        `Enum.findAll` is deprecated.
+        """
+        enum = Enum('doc', [])
+        self.assertThat(
+            lambda: enum.findAll(foo=u'a'),
+            is_deprecated(Contains('use Enum.find_all')))
+
+
+    def test_getDesc_deprecated(self):
+        """
+        `Enum.getDesc` is deprecated.
+        """
+        enum = Enum('doc', [])
+        self.assertThat(
+            lambda: enum.getDesc(u'a'),
+            is_deprecated(Contains('use Enum.desc')))
+
+
+    def test_getExtra_deprecated(self):
+        """
+        `Enum.getExtra` is deprecated.
+        """
+        enum = Enum('doc', [])
+        self.assertThat(
+            lambda: enum.getExtra(u'a', u'extra'),
+            is_deprecated(Contains('use Enum.extra')))
+
+
+    def test_asPairs_deprecated(self):
+        """
+        `Enum.asPairs` is deprecated.
+        """
+        enum = Enum('doc', [])
+        self.assertThat(
+            lambda: enum.asPairs(),
+            is_deprecated(Contains('use Enum.as_pairs')))
+
+
+    def test_fromPairs_deprecated(self):
+        """
+        `Enum.fromPairs` is deprecated.
+        """
+        self.assertThat(
+            lambda: Enum.fromPairs('doc', []),
+            is_deprecated(Contains('use Enum.from_pairs')))
+
+
 
 def enum_values_fixture():
     """
@@ -234,19 +325,19 @@ class EnumTests(TestCase):
         """
         enum = Enum('doc', enum_values_fixture())
         self.assertThat(
-            enum.get_extra(u'foo', 'quux'),
+            enum.extra(u'foo', 'quux'),
             Equals(u'hello'))
         self.assertThat(
-            enum.get_extra(u'foo', 'frob'),
+            enum.extra(u'foo', 'frob'),
             Equals(u'world'))
         self.assertThat(
-            enum.get_extra(u'bar', 'quux'),
+            enum.extra(u'bar', 'quux'),
             Equals(u'goodbye'))
         self.assertThat(
-            enum.get_extra(u'bar', 'nope'),
+            enum.extra(u'bar', 'nope'),
             Is(None))
         self.assertThat(
-            enum.get_extra(u'bar', 'nope', u''),
+            enum.extra(u'bar', 'nope', u''),
             Equals(u''))
 
 
@@ -402,19 +493,19 @@ class ObjectEnumTests(TestCase):
         values = object_enum_values_fixture(object1, object2, object3)
         enum = ObjectEnum('doc', values)
         self.assertThat(
-            enum.get_extra(object1, 'quux'),
+            enum.extra(object1, 'quux'),
             Equals(u'hello'))
         self.assertThat(
-            enum.get_extra(object1, 'frob'),
+            enum.extra(object1, 'frob'),
             Equals(u'world'))
         self.assertThat(
-            enum.get_extra(object2, 'quux'),
+            enum.extra(object2, 'quux'),
             Equals(u'goodbye'))
         self.assertThat(
-            enum.get_extra(u'bar', 'nope'),
+            enum.extra(u'bar', 'nope'),
             Is(None))
         self.assertThat(
-            enum.get_extra(u'bar', 'nope', u''),
+            enum.extra(u'bar', 'nope', u''),
             Equals(u''))
 
 
