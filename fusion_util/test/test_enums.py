@@ -41,8 +41,7 @@ class Warnings(object):
 
 
     def __str__(self):
-        return 'Warnings({})'.format(
-            str(self.warnings_matcher))
+        return 'Warnings({!s})'.format(self.warnings_matcher)
 
 
 
