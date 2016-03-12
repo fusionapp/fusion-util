@@ -45,7 +45,7 @@ class Warnings(object):
 
 
 
-def deprecated(message):
+def is_deprecated(message):
     """
     Make a matcher that checks that a callable produces exactly one
     `DeprecationWarning`.
@@ -118,7 +118,7 @@ class EnumItemTests(TestCase):
         item = EnumItem(u'foo', u'Foo', a=1)
         self.assertThat(
             lambda: item.a,
-            deprecated(Contains('use EnumItem.get')))
+            is_deprecated(Contains('use EnumItem.get')))
 
 
 
@@ -234,7 +234,7 @@ class GenericEnumTestsMixin(TestCase):
         enum = Enum('doc', [])
         self.assertThat(
             lambda: enum.findAll(foo=u'a'),
-            deprecated(Contains('use Enum.find_all')))
+            is_deprecated(Contains('use Enum.find_all')))
 
 
     def test_getDesc_deprecated(self):
@@ -244,7 +244,7 @@ class GenericEnumTestsMixin(TestCase):
         enum = Enum('doc', [])
         self.assertThat(
             lambda: enum.getDesc(u'a'),
-            deprecated(Contains('use Enum.desc')))
+            is_deprecated(Contains('use Enum.desc')))
 
 
     def test_getExtra_deprecated(self):
@@ -254,7 +254,7 @@ class GenericEnumTestsMixin(TestCase):
         enum = Enum('doc', [])
         self.assertThat(
             lambda: enum.getExtra(u'a', u'extra'),
-            deprecated(Contains('use Enum.extra')))
+            is_deprecated(Contains('use Enum.extra')))
 
 
     def test_asPairs_deprecated(self):
@@ -264,7 +264,7 @@ class GenericEnumTestsMixin(TestCase):
         enum = Enum('doc', [])
         self.assertThat(
             lambda: enum.asPairs(),
-            deprecated(Contains('use Enum.as_pairs')))
+            is_deprecated(Contains('use Enum.as_pairs')))
 
 
     def test_fromPairs_deprecated(self):
@@ -273,7 +273,7 @@ class GenericEnumTestsMixin(TestCase):
         """
         self.assertThat(
             lambda: Enum.fromPairs('doc', []),
-            deprecated(Contains('use Enum.from_pairs')))
+            is_deprecated(Contains('use Enum.from_pairs')))
 
 
 
