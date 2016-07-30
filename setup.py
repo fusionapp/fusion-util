@@ -6,7 +6,7 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description='Utility package for Fusion',
-    url='https://github.org/fusionapp/fusion-util',
+    url='https://github.com/fusionapp/fusion-util',
     install_requires=[
         'Twisted[tls] >= 15.0.0',
         'testtools >= 2.0.0',
