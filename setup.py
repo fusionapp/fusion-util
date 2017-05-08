@@ -9,6 +9,7 @@ setup(
     url='https://github.com/fusionapp/fusion-util',
     install_requires=[
         'Twisted[tls] >= 15.0.0',
+        'incremental',
         'testtools >= 2.0.0',
         ],
     license='MIT',
