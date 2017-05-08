@@ -10,7 +10,7 @@ setup(
     install_requires=[
         'Twisted[tls] >= 15.0.0',
         'incremental',
-        'testtools >= 2.0.0',
+        'testtools >= 2.1.0',
         ],
     license='MIT',
     packages=find_packages(),
