@@ -2,7 +2,7 @@ from testtools import TestCase
 
 from twisted.internet.defer import succeed
 
-from fusion_util.tap import tap
+from fusion_util import tap
 
 
 
