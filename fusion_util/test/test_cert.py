@@ -16,5 +16,5 @@ class chainCertTests(SynchronousTestCase):
         self.assertEqual(
             [],
             self.callDeprecated(
-                (Version('fusion_util', 'NEXT', 0, 0), 'pem.twisted'),
+                (Version('fusion_util', 1, 2, 0), 'pem.twisted'),
                 chainCerts, ''))
