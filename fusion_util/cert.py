@@ -9,7 +9,7 @@ from twisted.internet.ssl import Certificate
 
 
 
-@deprecated(Version('fusion_util', 'NEXT', 0, 0), 'pem.twisted')
+@deprecated(Version('fusion_util', 1, 2, 0), 'pem.twisted')
 def chainCerts(data):
     """
     Matches and returns any certificates found except the first match.
