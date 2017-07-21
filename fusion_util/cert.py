@@ -3,10 +3,13 @@ Utility functions for dealing with TLS certificates (and keys).
 """
 import re
 
+from incremental import Version
+from twisted.python.deprecate import deprecated
 from twisted.internet.ssl import Certificate
 
 
 
+@deprecated(Version('fusion_util', 1, 2, 0), 'pem.twisted')
 def chainCerts(data):
     """
     Matches and returns any certificates found except the first match.
