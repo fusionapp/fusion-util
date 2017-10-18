@@ -1,11 +1,10 @@
-import warnings
 from operator import methodcaller
 
 from testtools import TestCase
 from testtools.matchers import AfterPreprocessing as After
 from testtools.matchers import (
-    Contains, Equals, HasLength, Is, MatchesAll, MatchesListwise,
-    MatchesStructure, Mismatch, raises, IsDeprecated)
+    Contains, Equals, HasLength, Is, IsDeprecated, MatchesAll, MatchesListwise,
+    MatchesStructure, Not, raises)
 
 from fusion_util.enums import Enum, EnumItem, filter_enum, ObjectEnum
 from fusion_util.errors import InvalidEnumItem
@@ -28,6 +27,26 @@ class EnumItemTests(TestCase):
         self.assertThat(
             repr(EnumItem(u'foo', u'Foo', hidden=True)),
             Equals("<EnumItem value=u'foo' desc=u'Foo' hidden=True>"))
+
+
+    def test_equal(self):
+        """
+        `EnumItem`\s can be compared for equality.
+        """
+        self.assertThat(
+            EnumItem(u'1', u'One', hello=42),
+            Equals(EnumItem(u'1', u'One', hello=42)))
+
+
+    def test_notEqual(self):
+        """
+        `EnumItem`\s can be compared for inequality.
+        """
+        hello1 = object()
+        hello2 = object()
+        self.assertThat(
+            EnumItem(u'1', u'One', hello=hello1),
+            Not(Equals(EnumItem(u'1', u'One', hello=hello2))))
 
 
     def test_items(self):
@@ -76,6 +95,34 @@ class GenericEnumTestsMixin(TestCase):
     """
     Tests that are relevant to `Enum` and `ObjectEnum`.
     """
+    def test_equal(self):
+        """
+        `EnumItem`\s can be compared for equality.
+        """
+        values = [EnumItem(u'1', u'One'),
+                  EnumItem(u'2', u'Two', hello=42)]
+        self.assertThat(
+            Enum('doc', values),
+            Equals(Enum('doc', values)))
+
+
+    def test_notEqual(self):
+        """
+        `EnumItem`\s can be compared for inequality.
+        """
+        values = [EnumItem(u'1', u'One'),
+                  EnumItem(u'2', u'Two', hello=42)]
+        self.assertThat(
+            Enum('doc', values),
+            Equals(Enum('doc', values)))
+        self.assertThat(
+            Enum('doc', values),
+            Not(Equals(Enum('doc2', values))))
+        self.assertThat(
+            Enum('doc', values),
+            Not(Equals(Enum('doc', values[:1]))))
+
+
     def test_duplicate_values(self):
         """
         Constructing an enumeration with duplicate values results in
