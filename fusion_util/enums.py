@@ -59,9 +59,10 @@ class Enum(object):
 
 
     def __eq__(self, other):
-        if isinstance(other, Enum) and other.doc == self.doc:
-            return self._order == other._order
-        return False
+        if isinstance(other, Enum):
+            return (other.doc == self.doc and
+                    self._order == other._order)
+        return NotImplemented
 
 
     @classmethod
@@ -259,7 +260,7 @@ class EnumItem(object):
                     self.desc == other.desc and
                     self.hidden == other.hidden and
                     self._extra == other._extra)
-        return False
+        return NotImplemented
 
 
     def __getattr__(self, name):

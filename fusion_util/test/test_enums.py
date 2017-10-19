@@ -38,7 +38,7 @@ class EnumItemTests(TestCase):
             Equals(EnumItem(u'1', u'One', hello=42)))
 
 
-    def test_notEqual(self):
+    def test_not_equal(self):
         """
         `EnumItem`\s can be compared for inequality.
         """
@@ -47,6 +47,15 @@ class EnumItemTests(TestCase):
         self.assertThat(
             EnumItem(u'1', u'One', hello=hello1),
             Not(Equals(EnumItem(u'1', u'One', hello=hello2))))
+
+
+    def test_not_enum_equal(self):
+        """
+        `EnumItem`\s cannot be compared for equality against non-`EnumItem`\s.
+        """
+        self.assertThat(
+            EnumItem(u'1', u'One'),
+            Not(Equals(42)))
 
 
     def test_items(self):
@@ -97,7 +106,7 @@ class GenericEnumTestsMixin(TestCase):
     """
     def test_equal(self):
         """
-        `EnumItem`\s can be compared for equality.
+        `Enum`\s can be compared for equality.
         """
         values = [EnumItem(u'1', u'One'),
                   EnumItem(u'2', u'Two', hello=42)]
@@ -106,9 +115,9 @@ class GenericEnumTestsMixin(TestCase):
             Equals(Enum('doc', values)))
 
 
-    def test_notEqual(self):
+    def test_not_equal(self):
         """
-        `EnumItem`\s can be compared for inequality.
+        `Enum`\s can be compared for inequality.
         """
         values = [EnumItem(u'1', u'One'),
                   EnumItem(u'2', u'Two', hello=42)]
@@ -121,6 +130,15 @@ class GenericEnumTestsMixin(TestCase):
         self.assertThat(
             Enum('doc', values),
             Not(Equals(Enum('doc', values[:1]))))
+
+
+    def test_not_enum_equal(self):
+        """
+        `Enum`\s cannot be compared for equality against non-`Enum`\s.
+        """
+        self.assertThat(
+            Enum('doc', []),
+            Not(Equals(42)))
 
 
     def test_duplicate_values(self):
