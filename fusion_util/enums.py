@@ -58,6 +58,13 @@ class Enum(object):
             line)
 
 
+    def __eq__(self, other):
+        if isinstance(other, Enum):
+            return (other.doc == self.doc and
+                    self._order == other._order)
+        return NotImplemented
+
+
     @classmethod
     def from_pairs(cls, doc, pairs):
         """
@@ -245,6 +252,15 @@ class EnumItem(object):
             self.value,
             self.desc,
             self.hidden)
+
+
+    def __eq__(self, other):
+        if isinstance(other, EnumItem):
+            return (self.value == other.value and
+                    self.desc == other.desc and
+                    self.hidden == other.hidden and
+                    self._extra == other._extra)
+        return NotImplemented
 
 
     def __getattr__(self, name):
